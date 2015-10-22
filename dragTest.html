@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>DragTest01</title>
+	<style type="text/css">
+		.left, .right{
+			height:500px;
+			width:45%;
+			border:solid;
+		}
+		.left{
+			float:left;
+		}
+		.right{
+			float:right;
+		}
+		#dragObject{
+			width:200px;
+			height:200px;
+			background:red;
+			border: solid;
+			margin:5px;
+		}
+	</style>
+</head>
+<body>
+	<div class="left">
+		<div id="dragObject"></div>
+	</div>
+	<div class="right"></div>
+	<script type="text/javascript">
+		var left = document.querySelector(".left");
+		var right = document.querySelector(".right");
+		var dragObject = document.querySelector("#dragObject");
+		dragObject.draggable = true;
+		right.addEventListener("dragover",function(e){
+			// console.log("dragging over!");
+			e.preventDefault();
+		});
+		right.addEventListener("drop",function(e){
+			// console.log("drop!");
+			right.appendChild(dragObject);
+		});
+		left.addEventListener("dragover",function(e){
+			// console.log("dragging over!");
+			e.preventDefault();
+		});
+		left.addEventListener("drop",function(e){
+			// console.log("drop!");
+			left.appendChild(dragObject);
+		});
+	</script>
+</body>
+</html>
