@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>DragTest</title>
+	<style type="text/css">
+		body{
+			margin:0;
+		}
+		.left, .right{
+			position:relative;
+			height:500px;
+			width:45%;
+			border:solid;
+		}
+		.left{			
+			float:left;
+		}
+		.right{
+			float:right;
+		}
+		.dragObject{
+			position:absolute;
+			width:200px;
+			height:200px;
+			border: solid;
+		}
+		#dragRed{			
+			background:red;
+		}
+		#dragGreen{			
+			background:green;
+		}
+		.grid {
+    background: -webkit-linear-gradient(top, transparent 9px, #ddd 10px), -webkit-linear-gradient(left, #fafafa 9px, #ddd 10px);
+    background: -moz-linear-gradient(top, transparent 9px, #fff 10px), -moz-linear-gradient(left, #fafafa 9px, #fff 10px);
+    background: -o-linear-gradient(top, transparent 9px, #fff 10px), -o-linear-gradient(left, #fafafa 9px, #fff 10px);
+    background: -ms-linear-gradient(top, transparent 9px, #fff 10px), -ms-linear-gradient(left, #fafafa 9px, #fff 10px);
+    background: linear-gradient(top, transparent 9px, #fff 10px), linear-gradient(left, #fafafa 9px, #fff 10px);
+    -webkit-background-size: 10px 10px;
+    -moz-background-size: 10px 10px;
+    background-size: 10px 10px;
+		}
+		.tip{
+			width:50%;
+			margin:0 auto;
+			padding:30px 30px 0 30px;
+			clear:both;
+			font-weight:bolder;
+			font-size:26px;
+		}
+		.highlight{
+			color:red;
+		}
+	</style>
+</head>
+<body>
+	<div class="left grid">
+		<div class="dragObject" id="dragRed"></div>
+	</div>
+	<div class="right grid">
+		<div class="dragObject" id="dragGreen"></div>
+	</div>
+	<div class="tip">If the node is an HTML img element, an HTML canvas element or a XUL image element, the image data is used.</div>
+	<div class="tip">Otherwise, image should be a <span class="highlight">visible</span> node and the drag image will be created from this.</div>
+	<script type="text/javascript">
+		var left = document.querySelector(".left"),
+				right = document.querySelector(".right"),
+				dragObject = document.querySelectorAll(".dragObject"),
+				img = document.createElement("img");
+		img.src = "./logo.png";
+
+		for(var l = dragObject.length - 1;l >= 0;l--){
+			dragObject[l].draggable = true;
+			dragObject[l].addEventListener("dragstart",function(e){
+				e.dataTransfer.setData("id", e.target.id);
+				e.dataTransfer.setData("position", JSON.stringify({x: e.offsetX, y: e.offsetY}) );			
+				if(e.target.id === "dragRed"){
+				  // e.dataTransfer.setDragImage(ghostImg, e.offsetX, e.offsetY);
+			    e.dataTransfer.setDragImage(img, 0, 0);
+				}
+				if(e.target.id === "dragGreen"){
+					var ghostImg = e.target.cloneNode(true);
+					ghostImg.id = "ghostImg";
+					ghostImg.style.backgroundColor = "pink";
+				  ghostImg.style.zIndex = -10;
+				  left.appendChild(ghostImg);
+				  e.dataTransfer.setDragImage(ghostImg, e.offsetX, e.offsetY);
+				}
+			})
+		}
+		right.addEventListener("dragover",function(e){
+			e.preventDefault();
+		});
+		right.addEventListener("drop",function(e){
+			var objectId = e.dataTransfer.getData("id"),
+					objectPosition = JSON.parse(e.dataTransfer.getData("position")),
+					dragObj = document.querySelector("#" + objectId);
+			dragObj.style.left = e.pageX - objectPosition.x - right.offsetLeft + "px";
+			dragObj.style.top = e.pageY - objectPosition.y - right.offsetTop + "px";
+			right.appendChild(dragObj);
+		});
+		left.addEventListener("dragover",function(e){
+			e.preventDefault();
+		});
+		left.addEventListener("drop",function(e){
+			var objectId = e.dataTransfer.getData("id"),
+					objectPosition = JSON.parse(e.dataTransfer.getData("position")),
+					dragObj = document.querySelector("#" + objectId);
+			dragObj.style.left = e.pageX - objectPosition.x - left.offsetLeft + "px";
+			dragObj.style.top = e.pageY - objectPosition.y - left.offsetLeft + "px";
+			left.appendChild(dragObj);
+		});
+	</script>
+</body>
+</html>
