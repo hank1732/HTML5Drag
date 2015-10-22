@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>DragTest01</title>
+	<title>DragTest</title>
 	<style type="text/css">
 		.left, .right{
 			height:500px;
@@ -15,32 +15,55 @@
 		.right{
 			float:right;
 		}
-		#dragObject{
+		.dragObject{
 			width:200px;
 			height:200px;
-			background:red;
 			border: solid;
 			margin:5px;
+		}
+		#dragRed{			
+			background:red;
+		}
+		#dragGreen{			
+			background:green;
+		}
+		.grid {
+    background: -webkit-linear-gradient(top, transparent 9px, #ddd 10px), -webkit-linear-gradient(left, #fafafa 9px, #ddd 10px);
+    background: -moz-linear-gradient(top, transparent 9px, #fff 10px), -moz-linear-gradient(left, #fafafa 9px, #fff 10px);
+    background: -o-linear-gradient(top, transparent 9px, #fff 10px), -o-linear-gradient(left, #fafafa 9px, #fff 10px);
+    background: -ms-linear-gradient(top, transparent 9px, #fff 10px), -ms-linear-gradient(left, #fafafa 9px, #fff 10px);
+    background: linear-gradient(top, transparent 9px, #fff 10px), linear-gradient(left, #fafafa 9px, #fff 10px);
+    -webkit-background-size: 10px 10px;
+    -moz-background-size: 10px 10px;
+    background-size: 10px 10px;
 		}
 	</style>
 </head>
 <body>
-	<div class="left">
-		<div id="dragObject"></div>
+	<div class="left grid">
+		<div class="dragObject" id="dragRed"></div>
+		<div class="dragObject" id="dragGreen"></div>
 	</div>
-	<div class="right"></div>
+	<div class="right grid"></div>
 	<script type="text/javascript">
 		var left = document.querySelector(".left");
 		var right = document.querySelector(".right");
-		var dragObject = document.querySelector("#dragObject");
-		dragObject.draggable = true;
+		var dragObject = document.querySelectorAll(".dragObject");
+		for(var l = dragObject.length - 1;l >=0;l--){
+			dragObject[l].draggable = true;
+			dragObject[l].addEventListener("dragstart",function(e){
+				e.dataTransfer.setData("id", e.target.id);
+			})
+		}
 		right.addEventListener("dragover",function(e){
 			// console.log("dragging over!");
 			e.preventDefault();
 		});
 		right.addEventListener("drop",function(e){
 			// console.log("drop!");
-			right.appendChild(dragObject);
+			var objectId = e.dataTransfer.getData("id");
+			var dragObj = document.querySelector("#" + objectId);
+			right.appendChild(dragObj);
 		});
 		left.addEventListener("dragover",function(e){
 			// console.log("dragging over!");
@@ -48,7 +71,9 @@
 		});
 		left.addEventListener("drop",function(e){
 			// console.log("drop!");
-			left.appendChild(dragObject);
+			var objectId = e.dataTransfer.getData("id");
+			var dragObj = document.querySelector("#" + objectId);
+			left.appendChild(dragObj);
 		});
 	</script>
 </body>
