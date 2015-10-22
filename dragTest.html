@@ -71,12 +71,12 @@
 			var objectId = e.dataTransfer.getData("id"),
 					objectPosition = JSON.parse(e.dataTransfer.getData("position")),
 					dragObj = document.querySelector("#" + objectId);
-			// console.log("x", e.offsetX);
-			// console.log("y", e.offsetY);
-			// console.log("objectPosition.x", objectPosition.x);
-			// console.log("objectPosition.y", objectPosition.y);
-			dragObj.style.left = e.offsetX - objectPosition.x + "px";
-			dragObj.style.top = e.offsetY - objectPosition.y + "px";
+			console.log("x", e.pageX);
+			console.log("y", e.pageY);
+			console.log("objectPosition.x", objectPosition.x);
+			console.log("objectPosition.y", objectPosition.y);
+			dragObj.style.left = e.pageX - objectPosition.x - right.offsetLeft + "px";
+			dragObj.style.top = e.pageY - objectPosition.y - right.offsetTop + "px";
 			right.appendChild(dragObj);
 		});
 		left.addEventListener("dragover",function(e){
@@ -88,8 +88,8 @@
 			var objectId = e.dataTransfer.getData("id"),
 					objectPosition = JSON.parse(e.dataTransfer.getData("position")),
 					dragObj = document.querySelector("#" + objectId);
-			dragObj.style.left = e.offsetX - objectPosition.x + "px";
-			dragObj.style.top = e.offsetY - objectPosition.y + "px";
+			dragObj.style.left = e.pageX - objectPosition.x - left.offsetLeft + "px";
+			dragObj.style.top = e.pageY - objectPosition.y - left.offsetLeft + "px";
 			left.appendChild(dragObj);
 		});
 	</script>
